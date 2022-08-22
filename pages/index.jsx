@@ -2,7 +2,7 @@ import ShopLayout1 from "components/layouts/ShopLayout1";
 import Navbar from "components/navbar/Navbar";
 import { useRouter } from 'next/router';
 // import Setting from "components/Setting";
-// import Section1 from "pages-sections/superstore-shop/Section1";
+import Section1 from "pages-sections/superstore-shop/Section1";
 // import Section10 from "pages-sections/superstore-shop/Section10";
 // import Section11 from "pages-sections/superstore-shop/Section11";
 // import Section12 from "pages-sections/superstore-shop/Section12";
@@ -38,7 +38,7 @@ const IndexPage = (props) => {
     // topRatedBrands,
     // newArrivalsList,
     // bigDiscountList,
-    // mainCarouselData,
+    mainCarouselData,
     // topRatedProducts,
     // bottomCategories,
     // bestSellerProducts,
@@ -55,8 +55,8 @@ const IndexPage = (props) => {
     <ShopLayout1 generalSetting={generalSetting}>
       <Navbar navListOpen={defaulCategoryShow}/>
  
-      {/* <Section1 carouselData={mainCarouselData} />
-      <Section2 flashDeals={flashDealsData} /> */}
+      <Section1 carouselData={mainCarouselData} />
+      {/* <Section2 flashDeals={flashDealsData} /> */}
       {/* <Section3 categoryList={topCategories} /> */}
       {/* <Section4
         topRatedList={topRatedProducts}
@@ -110,7 +110,7 @@ export async function getStaticProps() {
   // const bottomCategories = await api.getCategories();
   // const topCategories = await api.getTopCategories();
   // const topRatedBrands = await api.getTopRatedBrand();
-  // const mainCarouselData = await api.getMainCarousel();
+  const mainCarouselData = await api.getMainCarousel();
   // const newArrivalsList = await api.getNewArrivalList();
   // const bigDiscountList = await api.getBigDiscountList();
   // const topRatedProducts = await api.getTopRatedProduct();
@@ -135,7 +135,7 @@ export async function getStaticProps() {
       // topRatedBrands,
       // newArrivalsList,
       // bigDiscountList,
-      // mainCarouselData,
+      mainCarouselData,
       // topRatedProducts,
       // bottomCategories,
       // bestSellerProducts
