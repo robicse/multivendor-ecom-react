@@ -6,7 +6,9 @@ import asyncHandle from '../asyncHandle'
 const generalSetting = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/api/v1/general-settings`);
-    return response.data?.data[0];
+    //return response.data?.data[0];
+    //return JSON.parse(response.data?.data[0]);
+    return response.data?.data[0] || null;
   } catch (error) {
     console.log(error)
   }
@@ -148,23 +150,23 @@ const getBigDiscountList = async () => {
 export default {
   generalSetting,
   getMainCarousel,
-  getFlashDeals,
+  // getFlashDeals,
   getSellerList,
-  getTopCategories,
-  getBigDiscountList,
-  getTopRatedProduct,
-  getTopRatedBrand,
-  getNewArrivalList,
-  getCarBrands,
-  getCarList,
-  getMobileBrands,
-  getMobileShops,
-  getMobileList,
-  getOpticsBrands,
-  getOpticsShops,
-  getOpticsList,
-  getCategories,
-  getMoreItems,
-  getServiceList,
-  getBestSellerProductList
+  // getTopCategories,
+  // getBigDiscountList,
+  // getTopRatedProduct,
+  // getTopRatedBrand,
+  // getNewArrivalList,
+  // getCarBrands,
+  // getCarList,
+  // getMobileBrands,
+  // getMobileShops,
+  // getMobileList,
+  // getOpticsBrands,
+  // getOpticsShops,
+  // getOpticsList,
+  // getCategories,
+  // getMoreItems,
+  // getServiceList,
+  // getBestSellerProductList
 };

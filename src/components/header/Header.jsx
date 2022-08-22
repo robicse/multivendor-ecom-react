@@ -1,6 +1,8 @@
 import { KeyboardArrowDown, PersonOutline } from "@mui/icons-material";
 import { Badge, Box, Dialog, Drawer, styled } from "@mui/material";
 import Container from "@mui/material/Container";
+import axios from 'axios'
+import Router from 'next/router'
 import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -20,7 +22,7 @@ import Login from "pages-sections/sessions/Login";
 import { useState } from "react";
 import { layoutConstant } from "utils/constants";
 import SearchBox from "../search-box/SearchBox"; // styled component
-import useCustomerAuth from "hooks/useCustomerAuth";
+import useAuth from "hooks/useAuth";
 const BASE_URL = process.env.BASE_URL
 
 export const HeaderWrapper = styled(Box)(({ theme }) => ({
@@ -37,7 +39,7 @@ export const HeaderWrapper = styled(Box)(({ theme }) => ({
 // ==============================================================
 const Header = ({ isFixed,generalSetting, className, searchBoxType = "type1" }) => {
   const theme = useTheme();
-  const {logout, isAuthenticated, login, customerResistration, token} = useCustomerAuth()
+  const {logout, isAuthenticated, login, customerResistration, token} = useAuth()
   const { state } = useAppContext();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sidenavOpen, setSidenavOpen] = useState(false);
@@ -47,6 +49,13 @@ const Header = ({ isFixed,generalSetting, className, searchBoxType = "type1" }) 
   const toggleDialog = () => setDialogOpen(!dialogOpen);
 
   const toggleSidenav = () => setSidenavOpen(!sidenavOpen);
+
+   const logoutHandle = () =>{
+    const result = logout()
+    if(result){
+      Router.push('/');
+    }
+   }
 
   return (
     <HeaderWrapper className={clsx(className)}>
@@ -110,7 +119,7 @@ const Header = ({ isFixed,generalSetting, className, searchBoxType = "type1" }) 
 
           {
             token ? (
-              <Box onClick={()=>logout()}>Logout</Box>
+              <Box onClick={logoutHandle}>Logout</Box>
             ) :  ( <Box
               component={IconButton}
               p={1.25}

@@ -3,7 +3,7 @@ import "aos/dist/aos.css";
 import RTL from "components/RTL";
 import { AppProvider } from "contexts/AppContext";
 import SettingsProvider from "contexts/SettingContext";
-import CustomerAuthContext from "contexts/CustomerAuthContext";
+import AuthContext from "contexts/AuthContext";
 import Head from "next/head";
 import Router from "next/router";
 import nProgress from "nprogress";
@@ -48,11 +48,11 @@ const App = ({ Component, pageProps }) => {
 
       <SettingsProvider>
         <AppProvider>
-          <CustomerAuthContext>
+          <AuthContext>
           <MuiTheme>
             <RTL>{getLayout(<Component {...pageProps} />)}</RTL>
           </MuiTheme>
-          </CustomerAuthContext>
+          </AuthContext>
         </AppProvider>
       </SettingsProvider>
     </Fragment>

@@ -48,7 +48,7 @@ const IndexPage = (props) => {
   const { asPath, pathname } = useRouter();
   // console.log(pathname)
   const defaulCategoryShow = pathname == '/' ? true : false
-  console.log('sellerList',sellerList)
+  console.log('generalSetting',generalSetting)
   // console.log('moreItems',moreItems);
   return (
     

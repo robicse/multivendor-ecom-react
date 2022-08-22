@@ -22,7 +22,7 @@ const SocialButtons = (props) => {
         </FlexBox>
       </Box>
 
-      <BazarButton
+      {/* <BazarButton
         className="facebookButton"
         size="medium"
         fullWidth
@@ -37,7 +37,7 @@ const SocialButtons = (props) => {
         <Box fontSize="12px" ml={1}>
           Continue with Facebook
         </Box>
-      </BazarButton>
+      </BazarButton> */}
 
       <BazarButton
         className="googleButton"

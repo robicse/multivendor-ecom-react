@@ -9,10 +9,10 @@ import React, { useCallback, useState } from "react";
 import * as yup from "yup";
 import EyeToggleButton from "./EyeToggleButton";
 import { Wrapper } from "./Login";
-import useCustomerAuth from "hooks/useCustomerAuth";
+import useAuth from "hooks/useAuth";
 
 const SellerSignup = () => {
-  const {logout, isAuthenticated, login, customerResistration } = useCustomerAuth()
+  const {logout, isAuthenticated, login, customerResistration } = useAuth()
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const togglePasswordVisibility = useCallback(() => {
     setPasswordVisibility((visible) => !visible);

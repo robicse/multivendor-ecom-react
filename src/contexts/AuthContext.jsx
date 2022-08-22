@@ -1,7 +1,7 @@
-import {  createContext, useContext, useMemo, useReducer } from "react"; // ============================================================
+import React, {  createContext, useContext, useMemo, useReducer } from "react"; // ============================================================
 const BASE_URL = process.env.BASE_URL
 import Axios from 'axios'
-import api from "utils/api/superstore-shop";
+import api from "utils/api/auth";
 import setAuthToken from "utils/setToken";
 import cogoToast from 'cogo-toast';
 
@@ -10,21 +10,25 @@ const initialSettings = {
   user: null,
   isAuthenticated: false
 };
-export const CustomerAuthContext = createContext({
+export const AuthContext = createContext({
   initialSettings,
   dispatch: () => {},
 }); // ============================================================
 
-const CustomerReducer = (state, action) => {
+const AuthReducer = (state, action) => {
     switch (action.type) {
         case 'SUCCESS_LOGIN':
             return {
-                user: action.payload.details.userDetails,
+                user: action.payload.user,
                 isAuthenticated: true,
-                token: action.payload.token
+                token: action.payload.access_token
             };
-        case LOG_OUT:
-            localStorage.clear();
+        case 'SET_CUSTOMER_PROFILE':
+            return {
+                  user: action.payload,
+              };
+        case 'LOG_OUT':
+            // localStorage.clear();
             return {
                 isAuthenticated: false,
                 user: {},
@@ -35,42 +39,37 @@ const CustomerReducer = (state, action) => {
     }
   };
 // ============================================================
-const CustomerAuthProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(CustomerReducer, initialSettings);
+const AuthProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(AuthReducer, initialSettings);
 
-  //   const login = async (values) => {
-  //    api.getCategories()
-  // };
-  
+// get customer profile
+  const getCustomerProfile = async (values) => {
+    try {
+       const result =  await api.getCustomerProfile()
+      //  console.log(result);
+       dispatch({ type: 'SET_CUSTOMER_PROFILE', payload: result.data });
+    } catch (err) {
+        console.log(err)
+
+    }
+};
 
   const login = async (values) => {
-    // console.log(values)
-    const config = {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    },
-  };
     try {
         const data = new FormData()
         Object.entries(values).forEach(([key, value]) =>  data.append(key, value));
-        // await api.customerLogin(values)
-        // const res=  await api.getCategories()
-       //await  Axios.get(`https://dev.lifeokshop.com/api/version1/categories`,values )
-       await  Axios.post(`http://ecommerce.staritltd-devemon.one/api/v1/auth/login`,data)
-       cogoToast.success(`${'Login Success'}`, { position: 'top-right', bar: { size: '10px' } });
-      //  window.localStorage.setItem(
-      //       "customer_auth",
-      //       JSON.stringify(res.data.user)
-      //     );
-      //     window.localStorage.setItem(
-      //       "customer_access_token",
-      //       JSON.stringify(res.data?.user)
-      //     );
-      //   // dispatch({ type: 'SUCCESS_LOGIN', payload: res.data });
-      //   setAuthToken(res.data.access_token);
-        return true;
+         const result =  await api.loginApi(values)
+    //  setAuthToken(result.data.access_token);
+
+       window.localStorage.setItem(
+            "auth",
+            JSON.stringify(result.data)
+          );
+        dispatch({ type: 'SUCCESS_LOGIN', payload: result.data });
+        setAuthToken(result?.data?.access_token)
+        // console.log(result?.data?.access_token)
+        cogoToast.success(`${'Login Success'}`, { position: 'top-right', bar: { size: '10px' } });
+        return result?.data;
     } catch (err) {
       cogoToast.error(`${'Invalid Credentials'}`, { position: 'top-right', bar: { size: '10px' } });
         console.log(err)
@@ -82,6 +81,8 @@ const CustomerAuthProvider = ({ children }) => {
 // log out
 const logout = () => {
     dispatch({ type: 'LOG_OUT' });
+    window.localStorage.removeItem('auth')
+    setAuthToken(null)
     return true;
 };
 
@@ -97,8 +98,8 @@ const customerResistration = async (values) => {
       Object.entries(values).forEach(([key, value]) =>  data.append(key, value));
       const res=  await Axios.post(`http://ecommerce.staritltd-devemon.one/api/v1/auth/signup`,data)
       cogoToast.success(`${'Login Success'}`, { position: 'top-right', bar: { size: '10px' } });
-      // dispatch({ type: 'CUSTOMER_REQ_REQ', payload: res.data });
-      // setAuthToken(res.data.token);
+      dispatch({ type: 'CUSTOMER_REQ_REQ', payload: res.data });
+
      return true;
       
   } catch (err) {
@@ -107,8 +108,19 @@ const customerResistration = async (values) => {
       return false;
   }
 };
+
+
+
+React.useEffect(() => {
+  if (!window) return null;
+  const auth = window.localStorage.getItem("auth");
+  if (auth ){
+    dispatch({ type: 'SUCCESS_LOGIN', payload: JSON.parse(auth) });
+  } 
+}, []);
+
   return (
-    <CustomerAuthContext.Provider
+    <AuthContext.Provider
       value={{
         token:state.token,
         user:state.user,
@@ -119,9 +131,9 @@ const customerResistration = async (values) => {
       }}
     >
       {children}
-    </CustomerAuthContext.Provider>
+    </AuthContext.Provider>
   );
 };
 
-export const useAppContext = () => useContext(CustomerAuthContext);
-export default CustomerAuthProvider;
+export const useAppContext = () => useContext(AuthContext);
+export default AuthProvider;
