@@ -1,0 +1,12 @@
+version: '3'
+services:
+  ecommerce_client:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    volumes: 
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports: 
+      - "3000:300"
+    stdin_open: true
