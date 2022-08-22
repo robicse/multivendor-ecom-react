@@ -15,7 +15,7 @@ import Section1 from "pages-sections/superstore-shop/Section1";
 // import Section6 from "pages-sections/superstore-shop/Section6";
 // import Section7 from "pages-sections/superstore-shop/Section7";
 // import Section8 from "pages-sections/superstore-shop/Section8";
-// import SellerListSection from "pages-sections/superstore-shop/sellerListSection";
+import SellerListSection from "pages-sections/superstore-shop/sellerListSection";
 
 
 import api from "utils/api/superstore-shop";
@@ -42,13 +42,13 @@ const IndexPage = (props) => {
     // topRatedProducts,
     // bottomCategories,
     // bestSellerProducts,
-    // sellerList
+    sellerList
   } = props;
 
   const { asPath, pathname } = useRouter();
   // console.log(pathname)
   const defaulCategoryShow = pathname == '/' ? true : false
-  // console.log('sellerList',sellerList)
+  console.log('sellerList',sellerList)
   // console.log('moreItems',moreItems);
   return (
     
@@ -83,9 +83,9 @@ const IndexPage = (props) => {
         productList={opticsList}
       />
 
-      <Section10 categories={bottomCategories} />
+      <Section10 categories={bottomCategories} /> */}
       <SellerListSection  sellerList={sellerList}/>
-      <Section11 moreItems={moreItems} />
+      {/* <Section11 moreItems={moreItems} />
       <Section12 serviceList={serviceList} /> */}
 
       {/* <Setting /> */}
@@ -95,7 +95,7 @@ const IndexPage = (props) => {
 
 export async function getStaticProps() {
   const generalSetting = await api.generalSetting();
-  // const sellerList = await api.getSellerList();
+  const sellerList = await api.getSellerList();
   // const carList = await api.getCarList();
   // const carBrands = await api.getCarBrands();
   // const moreItems = await api.getMoreItems();
@@ -119,7 +119,7 @@ export async function getStaticProps() {
   return {
     props: {
       generalSetting,
-      // sellerList,
+      sellerList,
       // carList,
       // carBrands,
       // moreItems,
