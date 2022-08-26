@@ -57,6 +57,7 @@ const getFlashDeals = async () => {
  
 };
 
+// done
 const getSellerList = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/api/v1/shops`);
@@ -77,9 +78,26 @@ const getTopRatedBrand = async () => {
   return response.data;
 };
 
+//done
 const getNewArrivalList = async () => {
-  const response = await axios.get("/api/super-store/new-arrivals");
-  return response.data;
+  try {
+    const response = await axios.get(`${BASE_URL}/api/v1/new-arrival-products`);
+   // console.log(response)
+    return response.data?.data
+  } catch (error) {
+    return []
+  }
+};
+
+// done
+const getProductDetailsById = async (id) => {
+  try {
+     const response = await axios.get(`${BASE_URL}/api/v1/products/${id}`);
+     return response?.data?.data[0]
+  } catch (error) {
+    return []
+  
+  }
 };
 
 const getCarBrands = async () => {
@@ -150,13 +168,13 @@ const getBigDiscountList = async () => {
 export default {
   generalSetting,
   getMainCarousel,
-  // getFlashDeals,
+  getFlashDeals,
   getSellerList,
   // getTopCategories,
   // getBigDiscountList,
   // getTopRatedProduct,
   // getTopRatedBrand,
-  // getNewArrivalList,
+  getNewArrivalList,
   // getCarBrands,
   // getCarList,
   // getMobileBrands,
@@ -165,8 +183,9 @@ export default {
   // getOpticsBrands,
   // getOpticsShops,
   // getOpticsList,
-  // getCategories,
-  // getMoreItems,
-  // getServiceList,
+  getCategories,
+  getMoreItems,
+  getServiceList,
   // getBestSellerProductList
+  getProductDetailsById
 };
