@@ -332,8 +332,8 @@ const Navbar = ({ navListOpen, hideCategories, elevation }) => {
           </CategoryMenu>
 
           {/* Horizontal menu */}
-          <FlexBox gap={4}>{
-          renderNestedNav(navbarNavigations, true)}
+          <FlexBox gap={4}>
+            {/* {renderNestedNav(navbarNavigations, true)} */}
           </FlexBox>
         </InnerContainer>
       ) : (

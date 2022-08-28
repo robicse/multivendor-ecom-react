@@ -909,11 +909,11 @@ const navigations = [
     href: "/product/search/groceries",
     menuComponent: "MegaMenu1",
   },
-  {
-    icon: Car,
-    title: "Automotive",
-    href: "/product/search/automotive",
-    menuComponent: "MegaMenu1",
-  },
+  // {
+  //   icon: Car,
+  //   title: "Automotive",
+  //   href: "/product/search/automotive",
+  //   menuComponent: "MegaMenu1",
+  // },
 ];
 export default navigations;
