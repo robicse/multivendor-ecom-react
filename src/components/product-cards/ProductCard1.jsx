@@ -7,6 +7,7 @@ import BazarRating from "components/BazarRating";
 import LazyImage from "components/LazyImage";
 import { H3, Span } from "components/Typography";
 import { useAppContext } from "contexts/AppContext";
+import useAuth from 'hooks/useAuth'
 import Link from "next/link";
 import React, { Fragment, useCallback, useState } from "react";
 import { FlexBox } from "../flex-box";
@@ -67,12 +68,30 @@ const ProductCard1 = ({
   discount = 5,
   showProductSize,
 }) => {
+
+  
   const { state, dispatch } = useAppContext();
+  const { token, user, wishList, addNewWishList, removefromWishList } = useAuth();
   const [isFavorite, setIsFavorite] = useState(false);
+
+  //  console.log(wishList.map(item=>item.product.id).includes(id))
   const cartItem = state.cart.find((item) => item.id === id);
 
-  const toggleIsFavorite = () => setIsFavorite((fav) => !fav);
+  const handleWishList = (type, idType) =>{
+    console.log(type, idType)
+    if(!user){
+     return alert('Please Login')
+    }
+    if(type == 'add'){
+      addNewWishList(idType)
+    }
 
+    if(type == 'remove'){
+      removefromWishList(idType[0].id)
+    }
+    
+    // setIsFavorite((fav) => !fav);
+  }
   const handleCartAmountChange = useCallback(
     (product) => () =>
       dispatch({
@@ -93,12 +112,12 @@ const ProductCard1 = ({
             sx={{
               p: "6px",
             }}
-            onClick={toggleIsFavorite}
+            // onClick={()=>toggleIsFavorite(id)}
           >
-            {isFavorite ? (
-              <Favorite color="primary" fontSize="small" />
+            {!!wishList.length && wishList.map(item=>item.product?.id).includes(id) ? (
+              <Favorite color="primary" fontSize="small"   onClick={()=>handleWishList('remove',wishList.filter(item=>item.product?.id === id))}/>
             ) : (
-              <FavoriteBorder fontSize="small" />
+              <FavoriteBorder fontSize="small"  onClick={()=>handleWishList('add',id)}/>
             )}
           </IconButton>
         </LoveIconWrapper>

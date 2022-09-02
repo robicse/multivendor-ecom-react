@@ -62,7 +62,7 @@ const Navigations = () => {
                 <span>{item.title}</span>
               </FlexBox>
 
-              <span>{item.count}</span>
+              {/* <span>{item.count}</span> */}
             </StyledNavLink>
           ))}
         </Fragment>
@@ -87,12 +87,12 @@ const linkList = [
         icon: FavoriteBorder,
         count: 19,
       },
-      {
-        href: "/support-tickets",
-        title: "Support Tickets",
-        icon: CustomerService,
-        count: 1,
-      },
+      // {
+      //   href: "/support-tickets",
+      //   title: "Support Tickets",
+      //   icon: CustomerService,
+      //   count: 1,
+      // },
     ],
   },
   {
@@ -110,12 +110,12 @@ const linkList = [
         icon: Place,
         count: 16,
       },
-      {
-        href: "/payment-methods",
-        title: "Payment Methods",
-        icon: CreditCard,
-        count: 4,
-      },
+      // {
+      //   href: "/payment-methods",
+      //   title: "Payment Methods",
+      //   icon: CreditCard,
+      //   count: 4,
+      // },
     ],
   },
 ];

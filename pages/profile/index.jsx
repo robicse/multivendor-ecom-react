@@ -11,12 +11,47 @@ import Link from "next/link";
 import imageUrlFormat from "utils/imageUrlFormat";
 import useAuth from "hooks/useAuth";
 import api from "utils/api/auth";
+import shopApi from "utils/api/superstore-shop";
+import { useState, useEffect } from "react";
  
-const Profile = ({customerProfile}) => {
-  const { user, token } = useAuth();
-  console.log(token, 'customer profile')
+const Profile = ({generalSetting}) => {
+
+  const { user, getCustomerDashboard}  = useAuth();
+  
+  console.log('getCustomerDashboard',getCustomerDashboard);
+  
+  const [customerDashboard, setCustomerDashboard] = useState({});
+  const [editAddressfromOpen, setEditAddressfromOpen] = useState(false)
+ 
+
+  const handleEditAddressForm =(data) => {
+    setEditdata(data)
+    setEditAddressfromOpen(!editAddressfromOpen)
+  }
+
+
+  const editAddressSubmitHandle = async(value)=>{
+    const res = await updateCustomerProfile(value);
+    if(res){
+      await getCustomerProfileFetch()
+      handleEditAddressForm(null)
+    }
+  }
+
+  const getCustomerDashboardFetch = async()=>{
+    const res = await getCustomerDashboard();
+    setCustomerDashboard(res?.response);
+  };
+
+  console.log('customerDashboard', customerDashboard)
+
+  useEffect(()=>{
+    getCustomerDashboardFetch();
+  },[])
+
+
   return (
-    <CustomerDashboardLayout>
+    <CustomerDashboardLayout generalSetting={generalSetting}>
       <UserDashboardHeader
         icon={Person}
         title="My Profile"
@@ -29,6 +64,7 @@ const Profile = ({customerProfile}) => {
                 px: 4,
                 bgcolor: "primary.light",
               }}
+              
             >
               Edit Profile
             </Button>
@@ -64,14 +100,11 @@ const Profile = ({customerProfile}) => {
                     <FlexBox alignItems="center">
                       <Typography color="grey.600">Balance:</Typography>
                       <Typography ml={0.5} color="primary.main">
-                      ৳{user?.balance}
+                      {/* ৳{user?.balance} */}
                       </Typography>
                     </FlexBox>
                   </div>
 
-                  {/* <Typography color="grey.600" letterSpacing="0.2em">
-                    SILVER USER
-                  </Typography> */}
                 </FlexBetween>
               </Box>
             </Card>
@@ -79,8 +112,8 @@ const Profile = ({customerProfile}) => {
 
           <Grid item md={6} xs={12}>
             <Grid container spacing={4}>
-              {infoList.map((item) => (
-                <Grid item lg={3} sm={6} xs={6} key={item.subtitle}>
+              
+                <Grid item lg={3} sm={6} xs={6}>
                   <Card
                     sx={{
                       height: "100%",
@@ -91,15 +124,55 @@ const Profile = ({customerProfile}) => {
                     }}
                   >
                     <H3 color="primary.main" my={0} fontWeight={600}>
-                      {item.title}
+                      {customerDashboard?.cart_product}
                     </H3>
 
                     <Small color="grey.600" textAlign="center">
-                      {item.subtitle}
+                    cart product
                     </Small>
                   </Card>
                 </Grid>
-              ))}
+
+                <Grid item lg={3} sm={6} xs={6} >
+                  <Card
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      p: "1rem 1.25rem",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <H3 color="primary.main" my={0} fontWeight={600}>
+                      {customerDashboard?.wishlist_product}
+                    </H3>
+
+                    <Small color="grey.600" textAlign="center">
+                    wishlist product
+                    </Small>
+                  </Card>
+                </Grid>
+
+                <Grid item lg={3} sm={6} xs={6} >
+                  <Card
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      p: "1rem 1.25rem",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <H3 color="primary.main" my={0} fontWeight={600}>
+                      {customerDashboard?.order_product}
+                    </H3>
+
+                    <Small color="grey.600" textAlign="center">
+                    order product
+                    </Small>
+                  </Card>
+                </Grid>
+             
             </Grid>
           </Grid>
         </Grid>
@@ -112,17 +185,12 @@ const Profile = ({customerProfile}) => {
       >
         <FlexBox flexDirection="column" p={1}>
           <Small color="grey.600" mb={0.5} textAlign="left">
-            First Name
+             Name
           </Small>
           <span>{user?.name}</span>
         </FlexBox>
 
-        <FlexBox flexDirection="column" p={1}>
-          <Small color="grey.600" mb={0.5} textAlign="left">
-            Last Name
-          </Small>
-          <span>{user?.name}</span>
-        </FlexBox>
+      
 
         <FlexBox flexDirection="column" p={1}>
           <Small color="grey.600" mb={0.5} textAlign="left">
@@ -137,16 +205,9 @@ const Profile = ({customerProfile}) => {
           </Small>
           <span>{user?.phone}</span>
         </FlexBox>
-
-        <FlexBox flexDirection="column" p={1}>
-          <Small color="grey.600" mb={0.5}>
-            Join date
-          </Small>
-          <span className="pre">
-            {user?.created_at && format(new Date(user?.created_at), "dd MMM, yyyy")}
-          </span>
-        </FlexBox>
       </TableRow>
+
+      
     </CustomerDashboardLayout>
   );
 };
@@ -170,13 +231,14 @@ const infoList = [
   },
 ];
 
-export async function getStaticProps(data) {
-  // console.log(token, '174')
-  const customerProfile = await api.getCustomerProfile();
+export async function getStaticProps() {
+  const generalSetting = await shopApi.generalSetting();
   return {
     props: {
-      customerProfile: customerProfile || {},
+      generalSetting,
+  
     },
   };
 }
+
 export default Profile;

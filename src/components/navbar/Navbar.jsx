@@ -320,7 +320,7 @@ const Navbar = ({ navListOpen, hideCategories, elevation }) => {
                 ml={1.25}
                 color="grey.600"
               >
-                Categories
+                Categories1
               </Paragraph>
 
               {settings.direction === "ltr" ? (
@@ -333,7 +333,7 @@ const Navbar = ({ navListOpen, hideCategories, elevation }) => {
 
           {/* Horizontal menu */}
           <FlexBox gap={4}>
-            {/* {renderNestedNav(navbarNavigations, true)} */}
+            {renderNestedNav(navbarNavigations, true)}
           </FlexBox>
         </InnerContainer>
       ) : (

@@ -1,6 +1,8 @@
 import { KeyboardArrowDown, PersonOutline } from "@mui/icons-material";
 import { Badge, Box, Dialog, Drawer, styled } from "@mui/material";
 import Container from "@mui/material/Container";
+import LogoutIcon from '@mui/icons-material/Logout';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import axios from 'axios'
 import Router from 'next/router'
 import IconButton from "@mui/material/IconButton";
@@ -37,9 +39,9 @@ export const HeaderWrapper = styled(Box)(({ theme }) => ({
 })); // ==============================================================
 
 // ==============================================================
-const Header = ({ isFixed,generalSetting, className, searchBoxType = "type1" }) => {
+const Header = ({ isFixed,generalSetting, className, searchBoxType = "type2" }) => {
   const theme = useTheme();
-  const {logout, isAuthenticated, login, customerResistration, token} = useAuth()
+  const {logout, isAuthenticated, login, customerResistration, token, wishList} = useAuth()
   const { state } = useAppContext();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sidenavOpen, setSidenavOpen] = useState(false);
@@ -119,7 +121,7 @@ const Header = ({ isFixed,generalSetting, className, searchBoxType = "type1" }) 
 
           {
             token ? (
-              <Box onClick={logoutHandle}>Logout</Box>
+              <Box onClick={logoutHandle}><LogoutIcon/></Box>
             ) :  ( <Box
               component={IconButton}
               p={1.25}
@@ -130,6 +132,22 @@ const Header = ({ isFixed,generalSetting, className, searchBoxType = "type1" }) 
             </Box>)
           }
          
+          {
+            token && (
+              <Badge badgeContent={wishList?.length} color="primary">
+              <Box
+                ml={2.5}
+                p={1.25}
+                bgcolor="grey.200"
+                component={IconButton}
+                onClick={()=>Router.push('/wish-list')}
+              >
+                <FavoriteIcon sx={{color:"red"}}/>
+              </Box>
+            </Badge>
+            )
+          }
+     
 
           <Badge badgeContent={state.cart.length} color="primary">
             <Box
@@ -157,7 +175,20 @@ const Header = ({ isFixed,generalSetting, className, searchBoxType = "type1" }) 
           <MiniCart />
         </Drawer>
 
-        {downMd && <MobileMenu />}
+        {/* {
+            token ? (
+              <Box onClick={logoutHandle}><LogoutIcon/></Box>
+            ) :  ( <Box
+              component={IconButton}
+              p={1.25}
+              bgcolor="grey.200"
+              onClick={toggleDialog}
+            >
+              <PersonOutline />
+            </Box>)
+          } */}
+
+        {/* {downMd && <PersonOutline />} */}
       </Container>
     </HeaderWrapper>
   );

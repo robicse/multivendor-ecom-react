@@ -2,21 +2,84 @@ import { Delete, Edit, Place } from "@mui/icons-material";
 import { Button, IconButton, Pagination, Typography,     Dialog,
   DialogContent } from "@mui/material";
 import { FlexBox } from "components/flex-box";
+import Checkbox from '@mui/material/Checkbox';
 import UserDashboardHeader from "components/header/UserDashboardHeader";
 import CustomerDashboardLayout from "components/layouts/customer-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
 import TableRow from "components/TableRow";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NewAddressForm from "components/customer/customerAddressFrom"; 
+import EditAddressFrom from "components/customer/editAddressFrom"; 
+import shopApi from "utils/api/superstore-shop";
 
-const AddressList = () => {
+import useAuth from "hooks/useAuth";
+
+const AddressList = ({generalSetting}) => {
+  const {token, getAllAddress, addAddress, updateAddress, deleteAddress, setDefaultAddress } = useAuth();
   const [addressfromOpen, setAddressfromOpen] = useState(false)
+  const [editAddressfromOpen, setEditAddressfromOpen] = useState(false)
+  const [editData, setEditdata] = useState(null)
+  const [adressList, setAddressList] = useState([])
+//data save
   const handleAddressForm =() => {
     setAddressfromOpen(!addressfromOpen)
+
   }
+//data edit
+  const handleEditAddressForm =(data) => {
+    setEditdata(data)
+    setEditAddressfromOpen(!editAddressfromOpen)
+  }
+  console.log(editData);
+  const handleSetDefault=async(id)=> {
+    const res = await setDefaultAddress(id)
+    if(res){
+      await  getAllHandleFetch()
+    }
+    
+  };
+
+
+
+
+  const getAllHandleFetch = async()=>{
+    const res = await getAllAddress();
+    setAddressList(res);
+  }
+
+  const addAddressHanle = async(value)=>{
+    const res = await addAddress(value);
+    if(res){
+      await getAllHandleFetch()
+      handleAddressForm()
+    }
+    
+  }
+
+  const editAddressSubmitHandle = async(value)=>{
+    const res = await updateAddress(value);
+    if(res){
+      await getAllHandleFetch()
+      handleEditAddressForm(null)
+    }
+  }
+
+  const deleteAddressHandle = async(id)=>{
+    const res = await deleteAddress(id);
+    if(res){
+     await getAllHandleFetch()
+    }
+  }
+
+
+  useEffect(()=>{
+    getAllHandleFetch();
+  },[])
+console.log(adressList);
+
   return (
-    <CustomerDashboardLayout>
+    <CustomerDashboardLayout generalSetting={generalSetting}>
       <UserDashboardHeader
         icon={Place}
         title="My Addresses"
@@ -34,8 +97,32 @@ const AddressList = () => {
           </Button>
         }
       />
+         <TableRow
+          sx={{
+            my: 2,
+            padding: "6px 18px",
+          }}
+          // key={ind}
+        >
 
-      {orderList.map((_, ind) => (
+          <Typography whiteSpace="pre" m={0.75} textAlign="left">
+            City
+          </Typography>
+
+          <Typography whiteSpace="pre" m={0.75} textAlign="left">
+          Address
+          </Typography>
+
+          <Typography whiteSpace="pre" m={0.75} textAlign="left">
+             Phone
+          </Typography>
+
+          <Typography whiteSpace="pre" m={0.75} textAlign="left">
+             Postal Code
+          </Typography> 
+
+        </TableRow>
+      {adressList?.map((item, ind) => (
         <TableRow
           sx={{
             my: 2,
@@ -44,74 +131,72 @@ const AddressList = () => {
           key={ind}
         >
           <Typography whiteSpace="pre" m={0.75} textAlign="left">
-            Ralf Edward
+            {item?.city}
           </Typography>
 
-          <Typography flex="1 1 260px !important" m={0.75} textAlign="left">
-            777 Brockton Avenue, Abington MA 2351
+          <Typography whiteSpace="pre"  m={0.75} textAlign="left">
+            {item?.address}
           </Typography>
 
           <Typography whiteSpace="pre" m={0.75} textAlign="left">
-            +1927987987498
+          {item?.phone}
+          </Typography>
+
+          <Typography whiteSpace="pre" m={0.75} textAlign="left">
+          {item?.postal_code}
           </Typography>
 
           <Typography whiteSpace="pre" textAlign="center" color="grey.600">
-            <Link href="/address/xkssThds6h37sd" passHref>
-              <IconButton>
+             
+              
+          <IconButton>
+                  <Checkbox
+              checked={item.set_default == '0' ? false : true}
+              onChange={()=>handleSetDefault(item.id)}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+              </IconButton>
+
+
+            
+              <IconButton onClick={() => handleEditAddressForm(item)}>
                 <Edit fontSize="small" color="inherit" />
               </IconButton>
-            </Link>
 
-            <IconButton onClick={(e) => e.stopPropagation()}>
+
+            <IconButton onClick={() => deleteAddressHandle(item.id)}>
               <Delete fontSize="small" color="inherit" />
             </IconButton>
           </Typography>
         </TableRow>
       ))}
 
-      <FlexBox justifyContent="center" mt={5}>
+      {/* <FlexBox justifyContent="center" mt={5}>
         <Pagination count={5} onChange={(data) => console.log(data)} />
-      </FlexBox>
+      </FlexBox> */}
     
       <Dialog open={addressfromOpen} onClose={()=>handleAddressForm()}>
           <DialogContent>
-              <NewAddressForm/>
+              <NewAddressForm addAddressHanle={addAddressHanle} getAllHandleFetch={getAllHandleFetch} />
+          </DialogContent>
+        </Dialog>
+
+
+        <Dialog open={editAddressfromOpen} onClose={()=>handleEditAddressForm()}>
+          <DialogContent>
+              <EditAddressFrom editAddressSubmitHandle={editAddressSubmitHandle} editData={editData} />
           </DialogContent>
         </Dialog>
     </CustomerDashboardLayout>
   );
 };
-
-const orderList = [
-  {
-    orderNo: "1050017AS",
-    status: "Pending",
-    purchaseDate: new Date(),
-    price: 350,
-  },
-  {
-    orderNo: "1050017AS",
-    status: "Processing",
-    purchaseDate: new Date(),
-    price: 500,
-  },
-  {
-    orderNo: "1050017AS",
-    status: "Delivered",
-    purchaseDate: "2020/12/23",
-    price: 700,
-  },
-  {
-    orderNo: "1050017AS",
-    status: "Delivered",
-    purchaseDate: "2020/12/23",
-    price: 700,
-  },
-  {
-    orderNo: "1050017AS",
-    status: "Cancelled",
-    purchaseDate: "2020/12/15",
-    price: 300,
-  },
-];
+export async function getStaticProps() {
+  const generalSetting = await shopApi.generalSetting();
+  return {
+    props: {
+      generalSetting,
+  
+    },
+  };
+}
 export default AddressList;
