@@ -156,8 +156,20 @@ const getServiceList = async () => {
 
 
 const getTopCategories = async () => {
-  const response = await axios.get("/api/super-store/top-categories");
-  return response.data;
+  // const getTopCategories = async () => {
+  //   const response = await axios.get("/api/super-store/top-categories");
+  //   return response.data;
+  // };
+  
+  try {
+    const response = await axios.get(`${BASE_URL}/api/v1/all-categories`);
+ 
+   //  console.log(result, 'category')
+    return response?.data?.data
+ } catch (error) {
+   return []
+ 
+ }
 };
 
 const getBigDiscountList = async () => {
@@ -170,7 +182,7 @@ export default {
   getMainCarousel,
   getFlashDeals,
   getSellerList,
-  // getTopCategories,
+  getTopCategories,
   // getBigDiscountList,
   // getTopRatedProduct,
   // getTopRatedBrand,

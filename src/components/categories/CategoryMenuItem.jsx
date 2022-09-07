@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { ChevronLeft, ChevronRight, Avatar} from "@mui/icons-material";
 import { Box, MenuItem, styled } from "@mui/material";
 import useSettings from "hooks/useSettings";
 import Link from "next/link";
@@ -32,12 +32,24 @@ const Wrapper = styled(Box)(({ theme }) => ({
 // =============================================================
 const CategoryMenuItem = (props) => {
   const { href, title, caret, children, ...rest } = props;
+// console.log({href, title, caret, children, ...rest})
+  // console.log( { href, title, caret, children, ...rest })
   const { settings } = useSettings();
   return (
     <Wrapper>
       <Link href={href} passHref>
         <MenuItem className="category-dropdown-link">
-          {rest.icon && <rest.icon fontSize="small" color="inherit" />}
+          {
+            rest.icon && <img
+            style={{height:'20px', width:"20px"}}
+            src={`${rest.icon }`}
+            // srcSet={`${rest.icon }?w=248&fit=crop&auto=format&dpr=2 2x`}
+            alt={title}
+            loading="lazy"
+          />
+          }
+        
+          {/* {rest.icon && <rest.icon fontSize="small" color="inherit" />} */}
           <span className="title">{title}</span>
           {caret &&
             (settings.direction === "ltr" ? (

@@ -33,7 +33,7 @@ const IndexPage = (props) => {
     // opticsShops,
     // mobileBrands,
     // opticsBrands,
-    // topCategories,
+    topCategories,
     // flashDealsData,
     // topRatedBrands,
     newArrivalsList,
@@ -53,9 +53,9 @@ const IndexPage = (props) => {
   return (
     
     <ShopLayout1 generalSetting={generalSetting}>
-      <Navbar navListOpen={defaulCategoryShow}/>
+      <Navbar navListOpen={defaulCategoryShow} topCategories={topCategories}/>
  
-      <Section1 carouselData={mainCarouselData} />
+      <Section1 carouselData={mainCarouselData}/>
       {/* <Section2 flashDeals={flashDealsData} /> */}
       {/* <Section3 categoryList={topCategories} /> */}
       {/* <Section4
@@ -108,7 +108,7 @@ export async function getStaticProps() {
   // const flashDealsData = await api.getFlashDeals();
   // const opticsBrands = await api.getOpticsBrands();
   const bottomCategories = await api.getCategories();
-  // const topCategories = await api.getTopCategories();
+  const topCategories = await api.getTopCategories();
   // const topRatedBrands = await api.getTopRatedBrand();
   const mainCarouselData = await api.getMainCarousel();
   const newArrivalsList = await api.getNewArrivalList();
@@ -130,7 +130,7 @@ export async function getStaticProps() {
       // opticsShops,
       // mobileBrands,
       // opticsBrands,
-      // topCategories,
+      topCategories,
       // flashDealsData,
       // topRatedBrands,
       newArrivalsList,

@@ -15,11 +15,11 @@ const Wrapper = styled(Box)(({ open, theme: { direction } }) => ({
 })); // ===========================================================
 
 // ===========================================================
-const CategoryMenu = ({ open: isOpen = false, children }) => {
+const CategoryMenu = ({ open: isOpen = false, children, topCategories}) => {
   const [open, setOpen] = useState(isOpen);
   const popoverRef = useRef(open);
   popoverRef.current = open;
-
+// console.log(topCategories, '22')
   const toggleMenu = (e) => {
     e.stopPropagation();
     if (!isOpen) setOpen((open) => !open);
@@ -43,7 +43,7 @@ const CategoryMenu = ({ open: isOpen = false, children }) => {
         className: `${children.props.className}`,
       })}
 
-      <CategoryMenuCard open={open} />
+      <CategoryMenuCard open={open} topCategories={topCategories} />
     </Wrapper>
   );
 };

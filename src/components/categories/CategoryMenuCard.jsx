@@ -1,8 +1,9 @@
 import { Box, styled } from "@mui/material";
-import navigations from "data/navigations";
+import navigations from "data/customCategorySidebar";
 import CategoryMenuItem from "./CategoryMenuItem";
 import MegaMenu1 from "./mega-menu/MegaMenu1";
 import MegaMenu2 from "./mega-menu/MegaMenu2"; // styled component
+import categoryFormat from 'utils/categoryFormat'
 
 const Wrapper = styled(Box)(({ theme, position, open }) => ({
   left: 0,
@@ -21,14 +22,16 @@ const Wrapper = styled(Box)(({ theme, position, open }) => ({
 
 // ===============================================================
 const CategoryMenuCard = (props) => {
-  const { open, position } = props;
+  const { open, position, topCategories} = props;
+    const format = categoryFormat(topCategories);
+  // console.log(topCategories,navigations, 'menucard')
   const megaMenu = {
     MegaMenu1,
     MegaMenu2,
   };
   return (
     <Wrapper open={open} position={position}>
-      {navigations.map((item) => {
+      {format && format.map((item) => {
         let MegaMenu = megaMenu[item.menuComponent];
         return (
           <CategoryMenuItem
